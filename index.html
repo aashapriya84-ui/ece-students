@@ -3,64 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ECE Students</title>
+<title>ECE Full Details</title>
 <style>
 body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;margin:0;padding:10px}
-.login-box{max-width:350px;margin:60px auto;background:#fff;padding:20px;border-radius:15px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-.main-box{max-width:1000px;margin:0 auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-input,button{padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}
-button{background:#667eea;color:#fff;border:none;font-weight:bold;cursor:pointer}
+.login-box{max-width:350px;margin:60px auto;background:#fff;padding:20px;border-radius:15px;text-align:center}
+.main-box{max-width:1100px;margin:0 auto;background:#fff;padding:20px;border-radius:15px}
+input{padding:8px;margin:4px;border-radius:6px;border:1px solid #ccc;width:130px}
+button{background:#667eea;color:#fff;border:none;padding:8px 12px;border-radius:6px;font-weight:bold;cursor:pointer;margin:3px}
 table{width:100%;border-collapse:collapse;margin-top:15px}
 th,td{border:1px solid #ddd;padding:8px;text-align:center}
 th{background:#667eea;color:#fff}
-img.ph{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #667eea}
+img.ph{width:50px;height:50px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid #667eea}
+#pop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;z-index:99}
+#popBox{background:#fff;padding:20px;border-radius:15px;max-width:400px;width:90%;text-align:center}
+#popBox img{width:120px;height:120px;border-radius:50%;border:4px solid #667eea}
 </style>
 </head>
 <body>
 <div id="L" class="login-box">
 <h2>ECE Login</h2>
-<input id="p" type="password" placeholder="Password ece123"><br>
-<button onclick="if(document.getElementById('p').value=='ece123'){document.getElementById('L').style.display='none';document.getElementById('M').style.display='block';show()}else alert('Wrong password!')">Login</button>
+<input id="p" type="password" placeholder="ece123"><br><br>
+<button onclick="if(document.getElementById('p').value=='ece123'){document.getElementById('L').style.display='none';document.getElementById('M').style.display='block';show()}else alert('Wrong')">Login</button>
 </div>
-
 <div id="M" class="main-box" style="display:none">
-<h2>ECE Students - With Photos</h2>
-<div style="background:#f0f0ff;padding:12px;border-radius:10px">
-<input id="r" placeholder="Roll No e.g. 432">
-<input id="n" placeholder="Name e.g. S PRIYA">
+<h2>ECE Students - Parents Details</h2>
+<div style="background:#f0f0ff;padding:10px;border-radius:10px;display:flex;flex-wrap:wrap">
+<input id="r" placeholder="Roll">
+<input id="n" placeholder="Name">
+<input id="fn" placeholder="Father">
+<input id="mn" placeholder="Mother">
+<input id="phn" placeholder="Phone">
+<input id="ad" placeholder="Village">
 <input id="f" type="file" accept="image/*">
-<button onclick="add()">Add / Update Photo</button>
+<button onclick="add()">Add/Update</button>
+<button onclick="localStorage.clear();location.reload()" style="background:#ff4444">Reset 17</button>
 </div>
-<table><thead><tr><th>Photo</th><th>Roll</th><th>Name</th><th>Action</th></tr></thead><tbody id="tb"></tbody></table>
-<p style="color:gray;font-size:12px">Tip: Photo select chesi Add kottali Sasi</p>
+<table><thead><tr><th>Photo</th><th>Roll</th><th>Name</th><th>Father</th><th>Action</th></tr></thead><tbody id="tb"></tbody></table>
+<p style="font-size:12px;color:gray">Photo click cheste full details vastayi</p>
 </div>
-
+<div id="pop" onclick="this.style.display='none'"><div id="popBox"></div></div>
 <script>
-const def=[["412","CH SIVA SANKAR",""],["413","A SASI PRIYA",""]];
-let students=JSON.parse(localStorage.getItem("ece_v3"))||def;
+let def=[
+{roll:"401",name:"B LAKSHMI",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"402",name:"P RAVI TEJA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"403",name:"S ANUSHA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"404",name:"M DIVYA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"405",name:"K KIRAN",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"406",name:"R SURESH",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"407",name:"T PRIYA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"408",name:"V ANIL",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"412",name:"CH SIVA SANKAR",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"413",name:"A SASI PRIYA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"415",name:"G BHANU PRASAD",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"416",name:"K MALLISWARI",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"422",name:"A RAJAIAH",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"432",name:"S PRIYA",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"469",name:"S KRISH",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"477",name:"K VISHNU",fname:"",mname:"",phone:"",addr:"",photo:""},
+{roll:"488",name:"S KRUTHIK",fname:"",mname:"",phone:"",addr:"",photo:""}
+];
+let students=JSON.parse(localStorage.getItem("ece_full_v1")||"null")||def;
 let tp="";
 document.getElementById("f").addEventListener("change",e=>{
-  let file=e.target.files[0]; if(!file) return;
-  let rd=new FileReader(); rd.onload=ev=>{tp=ev.target.result}; rd.readAsDataURL(file);
+ let file=e.target.files[0]; if(!file) return;
+ let rd=new FileReader(); rd.onload=ev=>{tp=ev.target.result}; rd.readAsDataURL(file);
 });
 function show(){
-  let tb=document.getElementById("tb"); tb.innerHTML="";
-  students.forEach((s,i)=>{
-    let ph=s[2]||"https://via.placeholder.com/60?text="+s[0];
-    tb.innerHTML+=`<tr><td><img class=ph src="${ph}"></td><td>${s[0]}</td><td>${s[1]}</td><td><button onclick="ed(${i})">Edit</button> <button onclick="if(confirm('Delete?')){students.splice(${i},1);show()}">Del</button></td></tr>`;
-  });
-  localStorage.setItem("ece_v3",JSON.stringify(students));
+ let tb=document.getElementById("tb"); tb.innerHTML="";
+ students.forEach((s,i)=>{
+  let ph=s.photo||"https://via.placeholder.com/60?text="+s.roll;
+  tb.innerHTML+=`<tr><td><img class=ph src="${ph}" onclick="view(${i})"></td><td>${s.roll}</td><td>${s.name}</td><td>${s.fname||'-'}</td><td><button onclick="view(${i})">View Full</button> <button onclick="ed(${i})">Edit</button> <button onclick="if(confirm('Delete?')){students.splice(${i},1);save()}">Del</button></td></tr>`;
+ });
+ localStorage.setItem("ece_full_v1",JSON.stringify(students));
 }
+function save(){localStorage.setItem("ece_full_v1",JSON.stringify(students));show();}
 function add(){
-  let roll=document.getElementById("r").value.trim();
-  let name=document.getElementById("n").value.trim().toUpperCase();
-  if(!roll||!name) return alert("Roll & Name pettu Sasi");
-  let idx=students.findIndex(x=>x[0]==roll);
-  if(idx>=0){ students[idx][1]=name; if(tp) students[idx][2]=tp; }
-  else { students.push([roll,name,tp]); }
-  document.getElementById("r").value=""; document.getElementById("n").value=""; document.getElementById("f").value=""; tp=""; show();
+ let roll=document.getElementById("r").value.trim();
+ let name=document.getElementById("n").value.trim().toUpperCase();
+ let fname=document.getElementById("fn").value.trim();
+ let mname=document.getElementById("mn").value.trim();
+ let phone=document.getElementById("phn").value.trim();
+ let addr=document.getElementById("ad").value.trim();
+ if(!roll||!name) return alert("Roll & Name pettu Sasi");
+ let idx=students.findIndex(x=>x.roll==roll);
+ let obj={roll,name,fname,mname,phone,addr,photo:tp||(idx>=0?students[idx].photo:"")};
+ if(idx>=0) students[idx]=obj; else students.push(obj);
+ document.getElementById("r").value="";document.getElementById("n").value="";document.getElementById("fn").value="";document.getElementById("mn").value="";document.getElementById("phn").value="";document.getElementById("ad").value="";document.getElementById("f").value="";tp="";save();
 }
-function ed(i){ document.getElementById("r").value=students[i][0]; document.getElementById("n").value=students[i][1]; tp=students[i][2]||""; window.scrollTo(0,0); }
+function ed(i){document.getElementById("r").value=students[i].roll;document.getElementById("n").value=students[i].name;document.getElementById("fn").value=students[i].fname;document.getElementById("mn").value=students[i].mname;document.getElementById("phn").value=students[i].phone;document.getElementById("ad").value=students[i].addr;tp=students[i].photo;window.scrollTo(0,0);}
+function view(i){
+ let s=students[i];
+ let ph=s.photo||"https://via.placeholder.com/120?text="+s.roll;
+ document.getElementById("popBox").innerHTML=`<img src="${ph}"><h2>${s.name}</h2><p><b>Roll:</b> ${s.roll}</p><p><b>Father:</b> ${s.fname||'Not added'}</p><p><b>Mother:</b> ${s.mname||'Not added'}</p><p><b>Phone:</b> ${s.phone||'Not added'}</p><p><b>Address:</b> ${s.addr||'Not added'}</p><button onclick="document.getElementById('pop').style.display='none'">Close</button>`;
+ document.getElementById("pop").style.display="flex";
+}
 </script>
 </body>
 </html>
