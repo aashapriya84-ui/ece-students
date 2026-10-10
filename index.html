@@ -2,86 +2,62 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ECE 2024-28</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECE 2024-28 - All Girls</title>
 <style>
-body{font-family:Arial;background:#eef2f7;margin:0}
-#loginBox{max-width:350px;margin:80px auto;background:white;padding:30px;border-radius:12px;text-align:center}
-#mainBox{display:none;max-width:700px;margin:0 auto;background:white;min-height:100vh}
-h1{background:#3498db;color:white;margin:0;padding:20px;text-align:center}
-table{width:100%;border-collapse:collapse}
-tr{cursor:pointer} tr:hover{background:#e3f2fd}
-td{padding:12px;border-bottom:1px solid #eee;text-align:center}
-td img{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid #3498db}
-#popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center;z-index:99}
-#popupBox{background:white;width:90%;max-width:380px;border-radius:15px;padding:25px;text-align:center;position:relative}
-#popupBox img{width:90px;height:90px;border-radius:50%;border:3px solid #3498db}
-.close{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer}
-.detail{margin:8px 0;text-align:left;padding-left:15px}
-.detail b{color:#3498db}
+body{font-family:Arial; text-align:center; background:#fff0f5; margin:0;}
+#login{margin-top:100px;}
+#login div{background:white; padding:30px; border-radius:15px; display:inline-block; box-shadow:0 0 10px #ccc;}
+#login input{padding:10px; width:200px; margin:10px; border-radius:5px; border:1px solid #ccc;}
+#login button{padding:10px; width:220px; background:#0099cc; color:white; border:none; border-radius:5px; font-size:16px; cursor:pointer;}
+#gallery{display:none;}
+h1{color:#d63384; padding:20px;}
+.container{display:flex; flex-wrap:wrap; justify-content:center; gap:20px; padding:20px;}
+.card{border:3px solid #ffb6d9; border-radius:15px; padding:10px; width:200px; background:white;}
+.card img{width:180px; height:220px; object-fit:cover; border-radius:10px; background:#eee;}
+.card h3{color:#333; margin:5px;}
+.you{border-color:#ff1493; border-width:5px;}
 </style>
 </head>
 <body>
-<div id="loginBox">
+
+<div id="login">
+<div>
 <h2>ECE Login</h2>
 <input type="password" id="pass" placeholder="Password: ece123">
-<button onclick="login()" style="background:#3498db;color:white;padding:12px;width:95%;border:none;border-radius:6px">Login</button>
-<p id="err" style="color:red"></p>
+<br>
+<button onclick="check()">Login</button>
+<p id="msg" style="color:red;"></p>
+</div>
 </div>
 
-<div id="mainBox">
-<h1>ECE - 2024-28</h1>
-<table id="table"></table>
-<p style="text-align:center;color:#888;font-size:12px">👆 Student pai click chey</p>
-</div>
+<div id="gallery">
+<h1>💃 ECE Students - All Girls 2024-28 💃</h1>
+<div class="container">
 
-<div id="popup" onclick="if(event.target==this)closePop()">
-<div id="popupBox">
-<span class="close" onclick="closePop()">×</span>
-<img id="pPhoto" src="">
-<h3 id="pName"></h3>
-<p id="pRoll"></p><hr>
-<div class="detail"><b>Father:</b> <span id="pFather"></span></div>
-<div class="detail"><b>Mother:</b> <span id="pMother"></span></div>
-<div class="detail"><b>Phone:</b> <span id="pPhone"></span></div>
+<div class="card"><img src="402.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=402'"><h3>402 - New Girl</h3></div>
+<div class="card"><img src="403.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=403'"><h3>403 - Anusha</h3></div>
+<div class="card"><img src="404.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=404'"><h3>404 - Divya</h3></div>
+<div class="card"><img src="405.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=405'"><h3>405 - New Girl</h3></div>
+<div class="card"><img src="406.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=406'"><h3>406 - New Girl</h3></div>
+<div class="card"><img src="408.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=408'"><h3>408 - New Girl</h3></div>
+<div class="card"><img src="412.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=412'"><h3>412 - New Girl</h3></div>
+<div class="card you"><img src="413.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=413'"><h3>413 - Sasi Priya (YOU) 💖</h3></div>
+
 </div>
 </div>
 
 <script>
-function login(){
- if(document.getElementById('pass').value==='ece123'){
-  document.getElementById('loginBox').style.display='none';
-  document.getElementById('mainBox').style.display='block';
-  show();
- }else{document.getElementById('err').innerText='Wrong password'}
+function check(){
+let p=document.getElementById('pass').value;
+if(p==='ece123'){
+document.getElementById('login').style.display='none';
+document.getElementById('gallery').style.display='block';
+}else{
+document.getElementById('msg').innerText='Wrong Password! Try ece123';
 }
-
-const students=[
-{roll:"403", name:"S ANUSHA", photo:"IMG2.jpeg", father:"S Ramesh", mother:"Lakshmi", phone:"9XXXX"},
-{roll:"404", name:"M DIVYA", photo:"IMG3.jpeg", father:"M Srinivas", mother:"Jyothi", phone:"9XXXX"},
-{roll:"405", name:"G BHANU PRASAD", photo:"IMG4.jpeg", father:"G Venkatesh", mother:"Sunitha", phone:"9XXXX"},
-{roll:"406", name:"R SURES", photo:"IMG6.jpeg", father:"R Kumar", mother:"Devi", phone:"9XXXX"},
-{roll:"407", name:"T PRIYA", photo:"IMG7.jpeg", father:"T Prasad", mother:"Latha", phone:"9XXXX"},
-{roll:"408", name:"V ANIL", photo:"IMG8.jpeg", father:"V Ravi", mother:"Anitha", phone:"9XXXX"},
-{roll:"412", name:"CH SIVASANKAR", photo:"SIV.jpeg", father:"CH Satyam", mother:"Parvathi", phone:"9XXXX"},
-{roll:"413", name:"A SASI PRIYA", photo:"IM1.jpeg", father:"A Rajesh", mother:"Kumari", phone:"9XXXX"},
-{roll:"416", name:"K MALLISWARI", photo:"IMG9.jpeg", father:"K Babu", mother:"Rani", phone:"9XXXX"}
-];
-
-function show(){
- let h="";
- students.forEach((s,i)=>{
-  h+=`<tr onclick="openPop(${i})"><td><img src="${s.photo}"></td><td><b>${s.roll}</b></td><td><b>${s.name}</b></td></tr>`;
- });
- document.getElementById('table').innerHTML=h;
 }
-function openPop(i){
- const s=students[i];
- pPhoto.src=s.photo; pName.innerText=s.name; pRoll.innerText="Roll: "+s.roll;
- pFather.innerText=s.father; pMother.innerText=s.mother; pPhone.innerText=s.phone;
- popup.style.display='flex';
-}
-function closePop(){popup.style.display='none';}
 </script>
+
 </body>
 </html>
