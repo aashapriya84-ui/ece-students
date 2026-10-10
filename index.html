@@ -1,16 +1,66 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ECE Students</title>
-<style>body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;margin:0;padding:10px}.login-box{max-width:350px;margin:60px auto;background:#fff;padding:20px;border-radius:15px;text-align:center}.main-box{max-width:1000px;margin:0 auto;background:#fff;padding:20px;border-radius:15px}input,button{padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}button{background:#667eea;color:#fff;border:none;font-weight:bold;cursor:pointer}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:center}th{background:#667eea;color:#fff}img.ph{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #667eea}</style></head>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECE Students</title>
+<style>
+body{font-family:Arial;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;margin:0;padding:10px}
+.login-box{max-width:350px;margin:60px auto;background:#fff;padding:20px;border-radius:15px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.main-box{max-width:1000px;margin:0 auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+input,button{padding:10px;margin:5px;border-radius:8px;border:1px solid #ccc}
+button{background:#667eea;color:#fff;border:none;font-weight:bold;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{border:1px solid #ddd;padding:8px;text-align:center}
+th{background:#667eea;color:#fff}
+img.ph{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid #667eea}
+</style>
+</head>
 <body>
-<div id="L" class="login-box"><h2>ECE Login</h2><input id="p" type="password" placeholder="ece123"><br><button onclick="if(document.getElementById('p').value=='ece123'){document.getElementById('L').style.display='none';document.getElementById('M').style.display='block';show()}else alert('Wrong')">Login</button></div>
-<div id="M" class="main-box" style="display:none"><h2>ECE Students - Photos</h2>
-<div style="background:#f0ff;padding:10px;border-radius:10px"><input id="r" placeholder="Roll No 432"><input id="n" placeholder="Name S PRIYA"><input id="f" type="file" accept="image/*"><button onclick="add()">Add / Update</button></div>
-<table><thead><tr><th>Photo</th><th>Roll</th><th>Name</th><th>Action</th></tr></thead><tbody id="tb"></tbody></table></div>
+<div id="L" class="login-box">
+<h2>ECE Login</h2>
+<input id="p" type="password" placeholder="Password ece123"><br>
+<button onclick="if(document.getElementById('p').value=='ece123'){document.getElementById('L').style.display='none';document.getElementById('M').style.display='block';show()}else alert('Wrong password!')">Login</button>
+</div>
+
+<div id="M" class="main-box" style="display:none">
+<h2>ECE Students - With Photos</h2>
+<div style="background:#f0f0ff;padding:12px;border-radius:10px">
+<input id="r" placeholder="Roll No e.g. 432">
+<input id="n" placeholder="Name e.g. S PRIYA">
+<input id="f" type="file" accept="image/*">
+<button onclick="add()">Add / Update Photo</button>
+</div>
+<table><thead><tr><th>Photo</th><th>Roll</th><th>Name</th><th>Action</th></tr></thead><tbody id="tb"></tbody></table>
+<p style="color:gray;font-size:12px">Tip: Photo select chesi Add kottali Sasi</p>
+</div>
+
 <script>
 const def=[["401","B LAKSHMI",""],["402","P RAVI TEJA",""],["403","S ANUSHA",""],["404","M DIVYA",""],["405","K KIRAN",""],["406","R SURESH",""],["407","T PRIYA",""],["408","V ANIL",""],["412","CH SIVA SANKAR",""],["413","A SASI PRIYA",""],["415","G BHANU PRASAD",""],["416","K MALLISWARI",""],["422","A RAJAIAH",""],["432","S PRIYA",""],["469","S KRISH",""],["477","K VISHNU",""],["488","S KRUTHIK",""]];
-let students=JSON.parse(localStorage.getItem("ece_v3"))||def;let tp="";
-document.getElementById("f").addEventListener("change",e=>{let file=e.target.files[0];if(!file)return;let rd=new FileReader();rd.onload=ev=>{tp=ev.target.result};rd.readAsDataURL(file)});
-function show(){let tb=document.getElementById("tb");tb.innerHTML="";students.forEach((s,i)=>{let ph=s[2]||"https://via.placeholder.com/60?text="+s[0];tb.innerHTML+=`<tr><td><img class=ph src="${ph}"></td><td>${s[0]}</td><td>${s[1]}</td><td><button onclick="ed(${i})">Edit</button> <button onclick="students.splice(${i},1);show()">Del</button></td></tr>`});localStorage.setItem("ece_v3",JSON.stringify(students))}
-function add(){let roll=document.getElementById("r").value.trim();let name=document.getElementById("n").value.trim().toUpperCase();if(!roll||!name)return alert("Roll & Name pettu");let idx=students.findIndex(x=>x[0]==roll);if(idx>=0){students[idx][1]=name;if(tp)students[idx][2]=tp}else students.push([roll,name,tp]);document.getElementById("r").value="";document.getElementById("n").value="";document.getElementById("f").value="";tp="";show()}
-function ed(i){document.getElementById("r").value=students[i][0];document.getElementById("n").value=students[i][1];tp=students[i][2]||"";window.scrollTo(0,0)}
-</script></body></html>
+let students=JSON.parse(localStorage.getItem("ece_v3"))||def;
+let tp="";
+document.getElementById("f").addEventListener("change",e=>{
+  let file=e.target.files[0]; if(!file) return;
+  let rd=new FileReader(); rd.onload=ev=>{tp=ev.target.result}; rd.readAsDataURL(file);
+});
+function show(){
+  let tb=document.getElementById("tb"); tb.innerHTML="";
+  students.forEach((s,i)=>{
+    let ph=s[2]||"https://via.placeholder.com/60?text="+s[0];
+    tb.innerHTML+=`<tr><td><img class=ph src="${ph}"></td><td>${s[0]}</td><td>${s[1]}</td><td><button onclick="ed(${i})">Edit</button> <button onclick="if(confirm('Delete?')){students.splice(${i},1);show()}">Del</button></td></tr>`;
+  });
+  localStorage.setItem("ece_v3",JSON.stringify(students));
+}
+function add(){
+  let roll=document.getElementById("r").value.trim();
+  let name=document.getElementById("n").value.trim().toUpperCase();
+  if(!roll||!name) return alert("Roll & Name pettu Sasi");
+  let idx=students.findIndex(x=>x[0]==roll);
+  if(idx>=0){ students[idx][1]=name; if(tp) students[idx][2]=tp; }
+  else { students.push([roll,name,tp]); }
+  document.getElementById("r").value=""; document.getElementById("n").value=""; document.getElementById("f").value=""; tp=""; show();
+}
+function ed(i){ document.getElementById("r").value=students[i][0]; document.getElementById("n").value=students[i][1]; tp=students[i][2]||""; window.scrollTo(0,0); }
+</script>
+</body>
+</html>
