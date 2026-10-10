@@ -5,32 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECE 2024-28</title>
 <style>
-body{font-family:Arial;background:#eef2f7;margin:0;padding:0}
-#loginBox{max-width:350px;margin:80px auto;background:white;padding:30px;border-radius:12px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,.1)}
+body{font-family:Arial;background:#eef2f7;margin:0}
+#loginBox{max-width:350px;margin:80px auto;background:white;padding:30px;border-radius:12px;text-align:center}
 #mainBox{display:none;max-width:700px;margin:0 auto;background:white;min-height:100vh}
 h1{background:#3498db;color:white;margin:0;padding:20px;text-align:center}
-input{width:90%;padding:12px;margin:15px 0;border:1px solid #ccc;border-radius:6px}
-button{background:#3498db;color:white;padding:12px;width:95%;border:none;border-radius:6px;font-size:16px;cursor:pointer}
 table{width:100%;border-collapse:collapse}
-td{padding:12px 10px;border-bottom:1px solid #eee;text-align:center;vertical-align:middle}
-td:first-child{width:70px}
+tr{cursor:pointer} tr:hover{background:#e3f2fd}
+td{padding:12px;border-bottom:1px solid #eee;text-align:center}
 td img{width:55px;height:55px;border-radius:50%;object-fit:cover;border:2px solid #3498db}
-.roll{font-weight:bold;color:#333}
-.name{font-weight:bold;color:#2c3e50;text-transform:uppercase}
+#popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);justify-content:center;align-items:center;z-index:99}
+#popupBox{background:white;width:90%;max-width:380px;border-radius:15px;padding:25px;text-align:center;position:relative}
+#popupBox img{width:90px;height:90px;border-radius:50%;border:3px solid #3498db}
+.close{position:absolute;top:10px;right:15px;font-size:24px;cursor:pointer}
+.detail{margin:8px 0;text-align:left;padding-left:15px}
+.detail b{color:#3498db}
 </style>
 </head>
 <body>
 <div id="loginBox">
-<h2>ECE Students Login</h2>
-<p>Batch 2024-28</p>
+<h2>ECE Login</h2>
 <input type="password" id="pass" placeholder="Password: ece123">
-<button onclick="login()">Login</button>
+<button onclick="login()" style="background:#3498db;color:white;padding:12px;width:95%;border:none;border-radius:6px">Login</button>
 <p id="err" style="color:red"></p>
 </div>
 
 <div id="mainBox">
-<h1>ECE - 2024-28 Students</h1>
+<h1>ECE - 2024-28</h1>
 <table id="table"></table>
+<p style="text-align:center;color:#888;font-size:12px">👆 Student pai click chey</p>
+</div>
+
+<div id="popup" onclick="if(event.target==this)closePop()">
+<div id="popupBox">
+<span class="close" onclick="closePop()">×</span>
+<img id="pPhoto" src="">
+<h3 id="pName"></h3>
+<p id="pRoll"></p><hr>
+<div class="detail"><b>Father:</b> <span id="pFather"></span></div>
+<div class="detail"><b>Mother:</b> <span id="pMother"></span></div>
+<div class="detail"><b>Phone:</b> <span id="pPhone"></span></div>
+</div>
 </div>
 
 <script>
@@ -39,32 +53,35 @@ function login(){
   document.getElementById('loginBox').style.display='none';
   document.getElementById('mainBox').style.display='block';
   show();
- }else{
-  document.getElementById('err').innerText='Wrong password! ece123';
- }
+ }else{document.getElementById('err').innerText='Wrong password'}
 }
 
 const students=[
-{roll:"403", name:"S ANUSHA", photo:"IMG2.jpeg"},
-{roll:"404", name:"M DIVYA", photo:"IMG3.jpeg"},
-{roll:"405", name:"G BHANU PRASAD", photo:"IMG4.jpeg"},
-{roll:"406", name:"R SURES", photo:"IMG6.jpeg"},
-{roll:"407", name:"T PRIYA", photo:"IMG7.jpeg"},
-{roll:"408", name:"V ANIL", photo:"IMG8.jpeg"},
-{roll:"412", name:"CH SIVASANKAR", photo:"SIV.jpeg"},
-{roll:"413", name:"A SASI PRIYA", photo:"IM1.jpeg"},
-{roll:"415", name:"G BHANU PRASAD", photo:"ME.jpeg"},
-{roll:"416", name:"K MALLISWARI", photo:"IMG9.jpeg"},
-{roll:"422", name:"A RAIAH", photo:"IMG10.jpeg"}
+{roll:"403", name:"S ANUSHA", photo:"IMG2.jpeg", father:"S Ramesh", mother:"Lakshmi", phone:"9XXXX"},
+{roll:"404", name:"M DIVYA", photo:"IMG3.jpeg", father:"M Srinivas", mother:"Jyothi", phone:"9XXXX"},
+{roll:"405", name:"G BHANU PRASAD", photo:"IMG4.jpeg", father:"G Venkatesh", mother:"Sunitha", phone:"9XXXX"},
+{roll:"406", name:"R SURES", photo:"IMG6.jpeg", father:"R Kumar", mother:"Devi", phone:"9XXXX"},
+{roll:"407", name:"T PRIYA", photo:"IMG7.jpeg", father:"T Prasad", mother:"Latha", phone:"9XXXX"},
+{roll:"408", name:"V ANIL", photo:"IMG8.jpeg", father:"V Ravi", mother:"Anitha", phone:"9XXXX"},
+{roll:"412", name:"CH SIVASANKAR", photo:"SIV.jpeg", father:"CH Satyam", mother:"Parvathi", phone:"9XXXX"},
+{roll:"413", name:"A SASI PRIYA", photo:"IM1.jpeg", father:"A Rajesh", mother:"Kumari", phone:"9XXXX"},
+{roll:"416", name:"K MALLISWARI", photo:"IMG9.jpeg", father:"K Babu", mother:"Rani", phone:"9XXXX"}
 ];
 
 function show(){
  let h="";
- students.forEach(s=>{
-  h+=`<tr><td><img src="${s.photo}"></td><td class="roll">${s.roll}</td><td class="name">${s.name}</td></tr>`;
+ students.forEach((s,i)=>{
+  h+=`<tr onclick="openPop(${i})"><td><img src="${s.photo}"></td><td><b>${s.roll}</b></td><td><b>${s.name}</b></td></tr>`;
  });
  document.getElementById('table').innerHTML=h;
 }
+function openPop(i){
+ const s=students[i];
+ pPhoto.src=s.photo; pName.innerText=s.name; pRoll.innerText="Roll: "+s.roll;
+ pFather.innerText=s.father; pMother.innerText=s.mother; pPhone.innerText=s.phone;
+ popup.style.display='flex';
+}
+function closePop(){popup.style.display='none';}
 </script>
 </body>
 </html>
