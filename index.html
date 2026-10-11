@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ECE 2024-28 - All Girls</title>
+<title>ECE 2024-28 - Students</title>
 <style>
 body{font-family:Arial; text-align:center; background:#fff0f5; margin:0;}
 #login{margin-top:100px;}
@@ -14,6 +14,8 @@ body{font-family:Arial; text-align:center; background:#fff0f5; margin:0;}
 h1{color:#d63384; padding:20px;}
 .container{display:flex; flex-wrap:wrap; justify-content:center; gap:20px; padding:20px;}
 .card{border:3px solid #ffb6d9; border-radius:15px; padding:10px; width:200px; background:white;}
+.card.boy{border-color:#6cb4ee;}
+.card.girl{border-color:#ffb6d9;}
 .card img{width:180px; height:220px; object-fit:cover; border-radius:10px; background:#eee;}
 .card h3{color:#333; margin:5px;}
 .you{border-color:#ff1493; border-width:5px;}
@@ -21,43 +23,60 @@ h1{color:#d63384; padding:20px;}
 </head>
 <body>
 
-<div id="login">
-<div>
-<h2>ECE Login</h2>
-<input type="password" id="pass" placeholder="Password: ece123">
-<br>
-<button onclick="check()">Login</button>
-<p id="msg" style="color:red;"></p>
-</div>
-</div>
-
 <div id="gallery">
-<h1>💃 ECE Students - All Girls 2024-28 💃</h1>
-<div class="container">
-
-<div class="card"><img src="402.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=402'"><h3>402 - p ravi teja</h3></div>
-<div class="card"><img src="403.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=403'"><h3>403 - Anusha</h3></div>
-<div class="card"><img src="404.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=404'"><h3>404 - Divya</h3></div>
-<div class="card"><img src="405.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=405'"><h3>405 - g bhanu prasad</h3></div>
-<div class="card"><img src="406.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=406'"><h3>406 - r suresh</h3></div>
-<div class="card"><img src="408.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=408'"><h3>408 - v anil</h3></div>
-<div class="card"><img src="412.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=412'"><h3>412 - ch siva sankar</h3></div>
-<div class="card you"><img src="413.jpg" onerror="this.src='https://via.placeholder.com/180x220?text=413'"><h3>413 - Sasi Priya </h3></div>
-
-</div>
+<h1>ECE Students Management</h1>
+<div class="container" id="container"></div>
 </div>
 
 <script>
-function check(){
-let p=document.getElementById('pass').value;
-if(p==='ece123'){
-document.getElementById('login').style.display='none';
-document.getElementById('gallery').style.display='block';
-}else{
-document.getElementById('msg').innerText='Wrong Password! Try ece123';
-}
-}
-</script>
+// STUDENT DATA
+const students = [
+  {roll: 403, name: "S ANUSHA"},
+  {roll: 404, name: "M DIVYA"},
+  {roll: 405, name: "G BHANU PRASAD"},
+  {roll: 406, name: "R SURESH"},
+  {roll: 407, name: "T PRIYA"},
+  {roll: 408, name: "V ANIL"},
+  {roll: 412, name: "CH SIVASANKAR"},
+  {roll: 413, name: "A SASI PRIYA"},
+  {roll: 415, name: "G BHANU PRASAD"},
+  {roll: 416, name: "K MALLISWARI"},
+];
 
+// BOYS NAMES LIST - Ikkada unna names anni boys ga treat chestundi
+const boysKeywords = ["BHANU", "SURESH", "SIVA", "ANIL", "PRASAD", "RAVI", "SANKAR", "KUMAR", "BABU"];
+
+function getGender(name) {
+  let upper = name.toUpperCase();
+  return boysKeywords.some(k => upper.includes(k)) ? "male" : "female";
+}
+
+function getImage(name, gender) {
+  // Boys ki male avatar, Girls ki female avatar
+  if (gender === "male") {
+    return `https://api.dicebear.com/9.x/avataaars/svg?seed=${name}&backgroundColor=b6e3f4&top=shortFlat&facialHairProbability=30`;
+  } else {
+    return `https://api.dicebear.com/9.x/avataaars/svg?seed=${name}&backgroundColor=ffdfbf&top=longButNotTooLong`;
+  }
+}
+
+// DISPLAY CARDS
+const container = document.getElementById("container");
+document.getElementById("gallery").style.display = "block";
+
+students.forEach(s => {
+  let gender = getGender(s.name);
+  let img = getImage(s.name, gender);
+  let div = document.createElement("div");
+  div.className = `card ${gender === 'male' ? 'boy' : 'girl'}`;
+  div.innerHTML = `
+    <img src="${img}" alt="${s.name}">
+    <h3>${s.roll}</h3>
+    <h3>${s.name}</h3>
+    <small>${gender === 'male' ? 'BOY' : 'GIRL'}</small>
+  `;
+  container.appendChild(div);
+});
+</script>
 </body>
 </html>
