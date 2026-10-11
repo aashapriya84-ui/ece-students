@@ -2,53 +2,37 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ECE Students Management</title>
 <style>
-body{font-family:Arial;background:#f4f6fb;margin:0;text-align:center}
-h1{color:#d63384;padding:20px}
-.container{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;padding:20px}
-.card{background:white;width:190px;border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-.card img{width:160px;height:180px;border-radius:12px;object-fit:cover}
-.card h3{margin:6px 0;font-size:14px}
+body{background:#f2f6ff;font-family:Arial;text-align:center;margin:0}
+h1{color:#c2185b;padding:20px}
+.box{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px}
+.card{background:white;width:210px;border-radius:16px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,0.1);border-top:5px solid #e91e63}
+.card.boy{border-top-color:#1976d2}
+.card img{width:180px;height:200px;border-radius:12px;object-fit:cover}
 </style>
 </head>
 <body>
-<h1>ECE Students Management - Professional</h1>
-<div class="container" id="container"></div>
+<h1>ECE Students Management</h1>
+<div class="box" id="box"></div>
 <script>
-const students = [
-  {roll: 403, name: "S ANUSHA"},
-  {roll: 404, name: "M DIVYA"},
-  {roll: 405, name: "G BHANU PRASAD"},
-  {roll: 406, name: "R SURESH"},
-  {roll: 407, name: "T PRIYA"},
-  {roll: 408, name: "V ANIL"},
+const students=[
+{roll:403,name:"S ANUSHA",img:"girl1.jpg"},
+{roll:404,name:"M DIVYA",img:"girl2.jpg"},
+{roll:405,name:"G BHANU PRASAD",img:"boy1.jpg"},
+{roll:406,name:"R SURESH",img:"boy2.jpg"},
+{roll:407,name:"T PRIYA",img:"girl3.jpg"},
+{roll:408,name:"V ANIL",img:"boy3.jpg"},
+{roll:412,name:"CH SIVASANKAR",img:"boy1.jpg"},
+{roll:413,name:"A SASI PRIYA",img:"girl4.jpg"},
+{roll:414,name:"K LAKSHMI",img:"girl2.jpg"},
+{roll:415,name:"P RAVI KUMAR",img:"boy2.jpg"}
 ];
-
-const boysKeywords = ["BHANU","SURESH","ANIL","SIVA","PRASAD","RAVI","SANKAR","KUMAR"];
-
-function getGender(name){
-  return boysKeywords.some(k => name.toUpperCase().includes(k)) ? "male" : "female";
-}
-
-// REAL PROFESSIONAL PHOTOS API
-function getProfessionalImage(roll, gender){
-  // Boys ki boys real photos, Girls ki girls real photos
-  // Pravatar & RandomUser - Professional headshots
-  let id = roll % 70;
-  if(gender === "male"){
-    return `https://randomuser.me/api/portraits/men/${id}.jpg`;
-  } else {
-    return `https://randomuser.me/api/portraits/women/${id}.jpg`;
-  }
-}
-
-const container = document.getElementById("container");
+let b=document.getElementById("box");
 students.forEach(s=>{
-  let gender = getGender(s.name);
-  let img = getProfessionalImage(s.roll, gender);
-  container.innerHTML += `<div class="card"><img src="${img}"><h3>${s.roll}</h3><h3>${s.name}</h3><small>${gender.toUpperCase()}</small></div>`;
+let isBoy=s.img.includes("boy");
+b.innerHTML+=`<div class="card ${isBoy?'boy':''}"><img src="${s.img}"><h3>${s.roll}</h3><h3>${s.name}</h3></div>`;
 });
 </script>
 </body>
