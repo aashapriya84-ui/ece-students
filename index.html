@@ -1,57 +1,21 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ECE Students Management</title>
-<style>
-body{background:#f2f6ff;font-family:Arial;text-align:center;margin:0}
-h1{color:#c2185b;padding:20px 10px}
-.box{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;padding:20px}
-.card{background:white;width:230px;border-radius:16px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,0.15);border-top:5px solid #e91e63;cursor:pointer;transition:0.2s}
-.card:hover{transform:scale(1.03)}
-.card.boy{border-top-color:#1976d2}
-.card img{width:180px;height:200px;border-radius:12px;object-fit:cover}
-.card h3{margin:6px 0 2px 0;font-size:14px}
-#popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:99}
-#popup .inner{background:white;padding:25px;border-radius:18px;width:320px;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-#popup h2{color:#c2185b;text-align:center;margin-top:0}
-#popup button{padding:9px 18px;background:#c2185b;color:white;border:none;border-radius:8px;margin-top:14px;width:100%;cursor:pointer;font-size:14px}
-</style>
-</head>
-<body>
-<h1>ECE Students Management - Parents Details</h1>
-<div class="box" id="box"></div>
-<div id="popup"><div class="inner" id="popupContent"></div></div>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ECE</title>
+<style>body{background:#f2f6ff;font-family:Arial;text-align:center;margin:0}h1{color:#c2185b;padding:15px}.box{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;padding:15px}.card{background:white;width:210px;border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);cursor:pointer;border-top:5px solid #e91e63}.card.boy{border-top-color:#1976d2}.card img{width:170px;height:190px;border-radius:10px;object-fit:cover}.card h3{margin:4px;font-size:13px}#pop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:99}.inner{background:white;padding:20px;border-radius:16px;width:300px;text-align:left}#pop button{width:100%;padding:8px;background:#c2185b;color:white;border:none;border-radius:8px;margin-top:10px}</style>
+</head><body><h1>ECE Students Management</h1><div class="box" id="box"></div><div id="pop"><div class="inner" id="pc"></div></div>
 <script>
-const students=[
-{roll:403,name:"S ANUSHA",img:"girl1.jpg",father:"VENKATESWARLU",mother:"MADHAVI"},
-{roll:404,name:"M DIVYA",img:"girl2.jpg",father:"RAMANAIAH",mother:"LAKSHMI"},
-{roll:405,name:"G BHANU PRASAD",img:"boy1.jpg",father:"SUBRAMANYAM",mother:"DEVI"},
-{roll:406,name:"R SURESH",img:"boy2.jpg",father:"BALAIAH",mother:"PREMILA"},
-{roll:407,name:"T PRIYA",img:"girl3.jpg",father:"MAHESH",mother:"GOVARDHANI"},
-{roll:408,name:"V ANIL",img:"boy3.jpg",father:"ANKAIAH",mother:"ANUSHA"},
-{roll:412,name:"CH SIVASANKAR",img:"boy1.jpg",father:"DAYAKAR",mother:"ARUNA"},
-{roll:413,name:"A SASI PRIYA",img:"girl4.jpg",father:"RAJA",mother:"ANKAMMA"},
-{roll:414,name:"K LAKSHMI",img:"girl2.jpg",father:"KRISHNAIAH",mother:"NIROSHA"},
-{roll:415,name:"P RAVI KUMAR",img:"boy2.jpg",father:"CHIRANJEEVI",mother:"CHANDRAMA"}
+const s=[
+{roll:403,name:"S ANUSHA",img:"girl1.jpg",f:"VENKATESWARLU",m:"MADHAVI"},
+{roll:404,name:"M DIVYA",img:"girl2.jpg",f:"RAMANAIAH",m:"LAKSHMI"},
+{roll:405,name:"G BHANU PRASAD",img:"boy1.jpg",f:"SUBRAMANYAM",m:"DEVI"},
+{roll:406,name:"R SURESH",img:"boy2.jpg",f:"BALAIAH",m:"PREMILA"},
+{roll:407,name:"T PRIYA",img:"girl3.jpg",f:"MAHESH",m:"GOVARDHANI"},
+{roll:408,name:"V ANIL",img:"boy3.jpg",f:"ANKAIAH",m:"ANUSHA"},
+{roll:412,name:"CH SIVASANKAR",img:"boy1.jpg",f:"DAYAKAR",m:"ARUNA"},
+{roll:413,name:"A SASI PRIYA",img:"girl4.jpg",f:"RAJA",m:"ANKAMMA"},
+{roll:414,name:"K LAKSHMI",img:"girl2.jpg",f:"KRISHNAIAH",m:"NIROSHA"},
+{roll:415,name:"P RAVI KUMAR",img:"boy2.jpg",f:"CHIRANJEEVI",m:"CHANDRAMA"}
 ];
 let b=document.getElementById("box");
-students.forEach((s,i)=>{
-let isBoy=s.img.includes("boy");
-b.innerHTML+=`<div class="card ${isBoy?'boy':''}" onclick="show(${i})"><img src="${s.img}"><h3>${s.roll} - ${s.name}</h3><p style="font-size:11px;color:#888;margin:4px">Click for Parents</p></div>`;
-});
-function show(i){
-let s=students[i];
-document.getElementById("popupContent").innerHTML=`
-<h2>${s.name}</h2>
-<p><b>Roll No:</b> ${s.roll}</p>
-<p><b>Father:</b> ${s.father}</p>
-<p><b>Mother:</b> ${s.mother}</p>
-<button onclick="document.getElementById('popup').style.display='none'">Close</button>
-`;
-document.getElementById("popup").style.display="flex";
-}
-</script>
-</body>
-</html>
+s.forEach((x,i)=>{let c=x.img.includes("boy")?"boy":"";b.innerHTML+=`<div class="card ${c}" onclick="show(${i})"><img src="${x.img}"><h3>${x.roll}</h3><h3>${x.name}</h3><p style="font-size:10px;color:blue">Click for Parents</p></div>`});
+function show(i){let x=s[i];document.getElementById("pc").innerHTML=`<h3 style="color:#c2185b;text-align:center">${x.name} - ${x.roll}</h3><p><b>Father:</b> ${x.f}</p><p><b>Mother:</b> ${x.m}</p><button onclick="document.getElementById('pop').style.display='none'">Close</button>`;document.getElementById("pop").style.display="flex";}
+</script></body></html>
