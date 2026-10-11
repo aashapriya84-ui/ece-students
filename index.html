@@ -1,21 +1,64 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ECE</title>
-<style>body{background:#f2f6ff;font-family:Arial;text-align:center;margin:0}h1{color:#c2185b;padding:15px}.box{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;padding:15px}.card{background:white;width:210px;border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);cursor:pointer;border-top:5px solid #e91e63}.card.boy{border-top-color:#1976d2}.card img{width:170px;height:190px;border-radius:10px;object-fit:cover}.card h3{margin:4px;font-size:13px}#pop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:99}.inner{background:white;padding:20px;border-radius:16px;width:300px;text-align:left}#pop button{width:100%;padding:8px;background:#c2185b;color:white;border:none;border-radius:8px;margin-top:10px}</style>
-</head><body><h1>ECE Students Management</h1><div class="box" id="box"></div><div id="pop"><div class="inner" id="pc"></div></div>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ECE Students</title>
+<style>
+body{background:#f2f6ff;font-family:Arial;text-align:center;margin:0}
+h1{color:#c2185b;padding:15px;margin:0}
+#search{width:80%;max-width:400px;padding:12px 15px;border-radius:25px;border:2px solid #e91e63;outline:none;font-size:15px;margin:10px}
+.box{display:flex;flex-wrap:wrap;justify-content:center;gap:18px;padding:15px}
+.card{background:white;width:210px;border-radius:14px;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,0.15);cursor:pointer;border-top:5px solid #e91e63;transition:0.2s}
+.card:hover{transform:scale(1.03)}
+.card.boy{border-top-color:#1976d2}
+.card img{width:170px;height:190px;border-radius:10px;object-fit:cover}
+.card h3{margin:4px;font-size:13px}
+#pop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:99}
+.inner{background:white;padding:22px;border-radius:16px;width:320px;text-align:left}
+.inner a{color:green;text-decoration:none;font-weight:bold}
+#pop button{width:100%;padding:9px;background:#c2185b;color:white;border:none;border-radius:8px;margin-top:12px;cursor:pointer}
+</style>
+</head><body>
+<h1>ECE Students Management</h1>
+<input type="text" id="search" placeholder="Search by Name or Roll No... Eg: 403 or Anusha" onkeyup="searchStudent()">
+<div class="box" id="box"></div>
+<div id="pop"><div class="inner" id="pc"></div></div>
 <script>
-const s=[
-{roll:403,name:"S ANUSHA",img:"girl1.jpg",f:"VENKATESWARLU",m:"MADHAVI"},
-{roll:404,name:"M DIVYA",img:"girl2.jpg",f:"RAMANAIAH",m:"LAKSHMI"},
-{roll:405,name:"G BHANU PRASAD",img:"boy1.jpg",f:"SUBRAMANYAM",m:"DEVI"},
-{roll:406,name:"R SURESH",img:"boy2.jpg",f:"BALAIAH",m:"PREMILA"},
-{roll:407,name:"T PRIYA",img:"girl3.jpg",f:"MAHESH",m:"GOVARDHANI"},
-{roll:408,name:"V ANIL",img:"boy3.jpg",f:"ANKAIAH",m:"ANUSHA"},
-{roll:412,name:"CH SIVASANKAR",img:"boy1.jpg",f:"DAYAKAR",m:"ARUNA"},
-{roll:413,name:"A SASI PRIYA",img:"girl4.jpg",f:"RAJA",m:"ANKAMMA"},
-{roll:414,name:"K LAKSHMI",img:"girl2.jpg",f:"KRISHNAIAH",m:"NIROSHA"},
-{roll:415,name:"P RAVI KUMAR",img:"boy2.jpg",f:"CHIRANJEEVI",m:"CHANDRAMA"}
+const students=[
+{roll:403,name:"S ANUSHA",img:"girl1.jpg",f:"VENKATESWARLU",m:"MADHAVI",ph:"9876543210"},
+{roll:404,name:"M DIVYA",img:"girl2.jpg",f:"RAMANAIAH",m:"LAKSHMI",ph:"9876543211"},
+{roll:405,name:"G BHANU PRASAD",img:"boy1.jpg",f:"SUBRAMANYAM",m:"DEVI",ph:"9876543212"},
+{roll:406,name:"R SURESH",img:"boy2.jpg",f:"BALAIAH",m:"PREMILA",ph:"9876543213"},
+{roll:407,name:"T PRIYA",img:"girl3.jpg",f:"MAHESH",m:"GOVARDHANI",ph:"9876543214"},
+{roll:408,name:"V ANIL",img:"boy3.jpg",f:"ANKAIAH",m:"ANUSHA",ph:"9876543215"},
+{roll:412,name:"CH SIVASANKAR",img:"boy1.jpg",f:"DAYAKAR",m:"ARUNA",ph:"9876543216"},
+{roll:413,name:"A SASI PRIYA",img:"girl4.jpg",f:"RAJA",m:"ANKAMMA",ph:"9876543217"},
+{roll:414,name:"K LAKSHMI",img:"girl2.jpg",f:"KRISHNAIAH",m:"NIROSHA",ph:"9876543218"},
+{roll:415,name:"P RAVI KUMAR",img:"boy2.jpg",f:"CHIRANJEEVI",m:"CHANDRAMA",ph:"9876543219"}
 ];
-let b=document.getElementById("box");
-s.forEach((x,i)=>{let c=x.img.includes("boy")?"boy":"";b.innerHTML+=`<div class="card ${c}" onclick="show(${i})"><img src="${x.img}"><h3>${x.roll}</h3><h3>${x.name}</h3><p style="font-size:10px;color:blue">Click for Parents</p></div>`});
-function show(i){let x=s[i];document.getElementById("pc").innerHTML=`<h3 style="color:#c2185b;text-align:center">${x.name} - ${x.roll}</h3><p><b>Father:</b> ${x.f}</p><p><b>Mother:</b> ${x.m}</p><button onclick="document.getElementById('pop').style.display='none'">Close</button>`;document.getElementById("pop").style.display="flex";}
+
+function display(list){
+let b=document.getElementById("box");b.innerHTML="";
+list.forEach((x,i)=>{
+let realIndex=students.indexOf(x);
+let c=x.img.includes("boy")?"boy":"";
+b.innerHTML+=`<div class="card ${c}" onclick="show(${realIndex})"><img src="${x.img}"><h3>${x.roll}</h3><h3>${x.name}</h3><p style="font-size:10px;color:blue">Click for Details</p></div>`;
+});
+}
+display(students);
+
+function searchStudent(){
+let q=document.getElementById("search").value.toLowerCase();
+let filtered=students.filter(s=> s.name.toLowerCase().includes(q) || s.roll.toString().includes(q) );
+display(filtered);
+}
+
+function show(i){
+let x=students[i];
+document.getElementById("pc").innerHTML=`
+<h3 style="color:#c2185b;text-align:center;margin-top:0">${x.name} - ${x.roll}</h3>
+<p><b>Father:</b> ${x.f}</p>
+<p><b>Mother:</b> ${x.m}</p>
+<p><b>Phone:</b> <a href="tel:${x.ph}">${x.ph}</a></p>
+<button onclick="document.getElementById('pop').style.display='none'">Close</button>
+`;
+document.getElementById("pop").style.display="flex";
+}
 </script></body></html>
