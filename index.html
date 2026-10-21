@@ -1,59 +1,12 @@
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ECE Students - A6 ERP</title>
-<style>
-body{font-family:sans-serif;background:#f0f2f5;margin:0}
-header{background:#6c5ce7;color:#fff;padding:15px;text-align:center}
-.card{background:#fff;border-radius:10px;padding:12px;margin:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);text-align:center;width:200px;display:inline-block;vertical-align:top}
-.btn{border:none;padding:6px 10px;border-radius:6px;color:#fff;cursor:pointer;margin:3px}
-.grid{display:flex;flex-wrap:wrap;justify-content:center;padding:10px}
-.login-box{max-width:350px;margin:50px auto;background:#fff;padding:20px;border-radius:10px}
-input,select{width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #ccc}
-</style></head><body>
-<header><h2>ECE Students Management - A6 ERP</h2></header>
-<div id="login" class="login-box">
-<h3>Login</h3>
-<select id="role"><option>Admin</option><option>Student</option><option>Parent</option></select>
-<input id="user" placeholder="Roll No / Admin">
-<input id="pass" type="password" placeholder="Password 123">
-<button class="btn" style="background:#6c5ce7;width:100%" onclick="doLogin()">Login</button>
-<p style="font-size:12px;text-align:center">Admin: Admin / 123 | Student: Roll No / 123</p>
-</div>
-<div id="main" style="display:none">
-<div style="padding:10px;text-align:center">
-<input id="search" placeholder="Search name / roll" onkeyup="doSearch()" style="max-width:300px">
-<button class="btn" style="background:#d63031" onclick="logout()">Logout</button>
-<div id="adminPanel" style="display:none;margin:10px"><input id="newName" placeholder="Name"><input id="newRoll" placeholder="Roll"><input id="newFather" placeholder="Father"><input id="newMother" placeholder="Mother"><input id="newMarks" placeholder="Marks"><button class="btn" style="background:#00b894" onclick="addStudent()">Add Student</button></div>
-</div>
-<div id="grid" class="grid"></div>
-</div>
+<!-- PHOTO ADD CHESE CODE -->
 <script>
-let students=JSON.parse(localStorage.getItem('ece_data'))||[
-{name:"S ANUSHA",roll:"403",father:"S Ramesh",mother:"S Lakshmi",marks:85,fee:"Paid",photo:""},
-{name:"M DIVYA",roll:"404",father:"M Prasad",mother:"M Sita",marks:78,fee:"Paid",photo:""},
-{name:"G BHANU PRASAD",roll:"405",father:"G Srinu",mother:"G Latha",marks:82,fee:"Pending",photo:""},
-{name:"R SURESH",roll:"406",father:"R Kumar",mother:"R Devi",marks:75,fee:"Paid",photo:""}
-];
-let currentRole="";
-function doLogin(){
-let r=document.getElementById('role').value,u=document.getElementById('user').value,p=document.getElementById('pass').value;
-if(r==='Admin'&&u==='Admin'&&p==='123'){currentRole='Admin';document.getElementById('adminPanel').style.display='block';}
-else if(r!=='Admin'&&p==='123'){currentRole=r;}
-else{alert('Wrong password');return;}
-document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';render();
+function uploadPhoto(i){
+let input=document.createElement('input');input.type='file';input.accept='image/*';
+input.onchange=e=>{
+let reader=new FileReader();
+reader.onload=ev=>{students[i].photo=ev.target.result;render();};
+reader.readAsDataURL(e.target.files[0]);
+};
+input.click();
 }
-function logout(){location.reload();}
-function getGrade(m){return m>=85?'A':m>=70?'B':'C';}
-function render(list=students){
-let g=document.getElementById('grid');g.innerHTML="";
-list.forEach((s,i)=>{
-let photoHTML=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:8px;height:150px;object-fit:cover">`:`<div style="width:100%;height:150px;background:#dfe6e9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:40px">${s.name[0]}</div>`;
-g.innerHTML+=`<div class="card">${photoHTML}<h4>${s.roll} - ${s.name}</h4><p style="font-size:13px">📚 ${s.marks} Marks | ${getGrade(s.marks)}<br>💰 Fee: <b style="color:${s.fee==='Paid'?'green':'red'}">${s.fee}</b></p><button class="btn" style="background:#0984e3" onclick="openDetails(${i})">Parents Details</button><button class="btn" style="background:#e84393" onclick="makeID(${i})">ID Card</button></div>`;
-});
-localStorage.setItem('ece_data',JSON.stringify(students));
-}
-function openDetails(i){let s=students[i];alert(`Student: ${s.name}\nRoll: ${s.roll}\nFather: ${s.father}\nMother: ${s.mother}\nMarks: ${s.marks}\nFee: ${s.fee}`);}
-function makeID(i){let s=students[i];let w=window.open('','','width=350,height=500');w.document.write(`<div style="border:2px solid #000;padding:15px;text-align:center"><h3>ECE ID CARD</h3><h2>${s.name}</h2><p>Roll: ${s.roll}<br>Father: ${s.father}<br>Grade: ${getGrade(s.marks)}</p></div>`);}
-function addStudent(){let n=document.getElementById('newName').value,r=document.getElementById('newRoll').value,f=document.getElementById('newFather').value,m=document.getElementById('newMother').value,mk=document.getElementById('newMarks').value;if(!n||!r)return alert('Name Roll kavali');students.push({name:n,roll:r,father:f,mother:m,marks:parseInt(mk)||0,fee:"Pending",photo:""});render();}
-function doSearch(){let q=document.getElementById('search').value.toLowerCase();render(students.filter(s=>s.name.toLowerCase().includes(q)||s.roll.includes(q)));}
-</script></body></html>
+</script>
