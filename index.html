@@ -1,167 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ECE Students Management - ERP</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ECE Students - A6 ERP</title>
 <style>
-body{font-family:Arial;background:#fff0f3;margin:0;padding:0}
-h1{color:#c2185b;text-align:center}
-.login-box{width:320px;margin:80px auto;background:#fff;padding:25px;border-radius:15px;box-shadow:0 4px 15px #ccc;text-align:center}
-input,select{width:95%;padding:10px;margin:6px 0;border-radius:8px;border:1px solid #ccc}
-.btn{padding:10px 15px;border:none;border-radius:8px;color:#fff;cursor:pointer;margin:4px}
-.card{background:#fff;border-radius:12px;padding:12px;box-shadow:0 2px 8px #ddd;border-top:4px solid #e38aa3}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;padding:15px}
-.top-bar{text-align:center;padding:10px;background:#fff;margin:10px;border-radius:10px}
-#modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:99}
-#modalBox{background:#fff;padding:20px;border-radius:12px;width:300px}
-</style>
-</head>
-<body>
-
-<!-- 1. THREE LOGINS -->
-<div id="loginBox" class="login-box">
-<h2>ECE ERP Login</h2>
-<select id="roleSel"><option value="admin">Admin</option><option value="faculty">Faculty</option><option value="student">Student</option></select>
-<input id="user" value="admin" placeholder="username">
-<input id="pass" type="password" value="123" placeholder="password">
-<button class="btn" style="background:#c2185b;width:100%" onclick="login()">Login</button>
-<p style="font-size:11px">admin / faculty / student - password: 123</p>
+body{font-family:sans-serif;background:#f0f2f5;margin:0}
+header{background:#6c5ce7;color:#fff;padding:15px;text-align:center}
+.card{background:#fff;border-radius:10px;padding:12px;margin:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);text-align:center;width:200px;display:inline-block;vertical-align:top}
+.btn{border:none;padding:6px 10px;border-radius:6px;color:#fff;cursor:pointer;margin:3px}
+.grid{display:flex;flex-wrap:wrap;justify-content:center;padding:10px}
+.login-box{max-width:350px;margin:50px auto;background:#fff;padding:20px;border-radius:10px}
+input,select{width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid #ccc}
+</style></head><body>
+<header><h2>ECE Students Management - A6 ERP</h2></header>
+<div id="login" class="login-box">
+<h3>Login</h3>
+<select id="role"><option>Admin</option><option>Student</option><option>Parent</option></select>
+<input id="user" placeholder="Roll No / Admin">
+<input id="pass" type="password" placeholder="Password 123">
+<button class="btn" style="background:#6c5ce7;width:100%" onclick="doLogin()">Login</button>
+<p style="font-size:12px;text-align:center">Admin: Admin / 123 | Student: Roll No / 123</p>
 </div>
-
-<!-- MAIN -->
 <div id="main" style="display:none">
-<h1>ECE Students Management</h1>
-<div class="top-bar">
-<b>Role:</b> <span id="roleShow"></span> |
-<input id="searchBox" placeholder="Search Name / Roll / Parent" style="width:200px" onkeyup="searchNow()">
-<button class="btn" style="background:#6c5ce7" onclick="exportExcel()">Export Excel</button>
-<input type="file" id="fileUp" accept=".xlsx" style="width:150px">
-<button class="btn" style="background:#00b894" onclick="importExcel()">Import Excel</button>
-<button class="btn" style="background:#fdcb6e;color:#000" onclick="toggleDash()">Dashboard</button>
-<button class="btn" style="background:#333" onclick="location.reload()">Logout</button>
+<div style="padding:10px;text-align:center">
+<input id="search" placeholder="Search name / roll" onkeyup="doSearch()" style="max-width:300px">
+<button class="btn" style="background:#d63031" onclick="logout()">Logout</button>
+<div id="adminPanel" style="display:none;margin:10px"><input id="newName" placeholder="Name"><input id="newRoll" placeholder="Roll"><input id="newFather" placeholder="Father"><input id="newMother" placeholder="Mother"><input id="newMarks" placeholder="Marks"><button class="btn" style="background:#00b894" onclick="addStudent()">Add Student</button></div>
 </div>
-
-<!-- ADD FORM - Feature 3,4,5 -->
-<div id="addForm" class="card" style="margin:15px">
-<h3>Add Student (Auto Grade + Fee + Parent)</h3>
-<input id="r_roll" placeholder="Roll No 413">
-<input id="r_name" placeholder="Name A SASI PRIYA">
-<input id="r_marks" type="number" placeholder="Marks 0-100" oninput="document.getElementById('gPrev').innerText='Grade: '+getGrade(this.value)">
-<span id="gPrev" style="font-weight:bold;color:green"></span>
-<input id="r_father" placeholder="Father Name">
-<input id="r_mother" placeholder="Mother Name">
-<select id="r_fee"><option>Paid</option><option>Pending</option></select>
-<button class="btn" style="background:#c2185b" onclick="addStu()">Add Student</button>
+<div id="grid" class="grid"></div>
 </div>
-
-<!-- DASHBOARD - Feature 6 -->
-<div id="dash" class="card" style="margin:15px;display:none">
-<h3>Dashboard - Pass% & Fee Status</h3>
-<canvas id="chart" height="150"></canvas>
-<p id="statText"></p>
-</div>
-
-<div class="grid" id="grid"></div>
-</div>
-
-<!-- MODAL - Names + Parents Details Matrame -->
-<div id="modal"><div id="modalBox"></div></div>
-
 <script>
-let students = JSON.parse(localStorage.getItem('ece_data')) || [
-{roll:"403",name:"S ANUSHA",marks:88,father:"S Ramesh",mother:"S Lakshmi",fee:"Paid"},
-{roll:"404",name:"M DIVYA",marks:76,father:"M Srinivas",mother:"M Padma",fee:"Paid"},
-{roll:"405",name:"G BHANU PRASAD",marks:65,father:"G Suresh",mother:"G Sunitha",fee:"Pending"},
-{roll:"406",name:"R SURESH",marks:42,father:"R Venkat",mother:"R Kamala",fee:"Paid"},
-{roll:"407",name:"T PRIYA",marks:35,father:"T Murthy",mother:"T Geetha",fee:"Pending"},
-{roll:"408",name:"V ANIL",marks:90,father:"V Ravi",mother:"V Sarada",fee:"Paid"},
-{roll:"412",name:"CH SIVASANKAR",marks:82,father:"CH Narayana",mother:"CH Jyothi",fee:"Paid"},
-{roll:"413",name:"A SASI PRIYA",marks:95,father:"A Ramanaiah",mother:"A Lakshmi",fee:"Pending"},
-{roll:"414",name:"K LAKSHMI",marks:78,father:"K Ramesh",mother:"K Savitri",fee:"Paid"},
-{roll:"415",name:"P RAVI KUMAR",marks:55,father:"P Kumar",mother:"P Devi",fee:"Paid"}
+let students=JSON.parse(localStorage.getItem('ece_data'))||[
+{name:"S ANUSHA",roll:"403",father:"S Ramesh",mother:"S Lakshmi",marks:85,fee:"Paid",photo:""},
+{name:"M DIVYA",roll:"404",father:"M Prasad",mother:"M Sita",marks:78,fee:"Paid",photo:""},
+{name:"G BHANU PRASAD",roll:"405",father:"G Srinu",mother:"G Latha",marks:82,fee:"Pending",photo:""},
+{name:"R SURESH",roll:"406",father:"R Kumar",mother:"R Devi",marks:75,fee:"Paid",photo:""}
 ];
-
-function login(){
- let r=document.getElementById('roleSel').value;
- document.getElementById('loginBox').style.display='none';
- document.getElementById('main').style.display='block';
- document.getElementById('roleShow').innerText=r.toUpperCase();
- if(r==='student') document.getElementById('addForm').style.display='none';
- render();
+let currentRole="";
+function doLogin(){
+let r=document.getElementById('role').value,u=document.getElementById('user').value,p=document.getElementById('pass').value;
+if(r==='Admin'&&u==='Admin'&&p==='123'){currentRole='Admin';document.getElementById('adminPanel').style.display='block';}
+else if(r!=='Admin'&&p==='123'){currentRole=r;}
+else{alert('Wrong password');return;}
+document.getElementById('login').style.display='none';document.getElementById('main').style.display='block';render();
 }
-function getGrade(m){
- m=Number(m); if(m>=90)return "A+ PASS"; if(m>=75)return "A PASS"; if(m>=60)return "B PASS"; if(m>=40)return "C PASS"; return "F FAIL";
-}
+function logout(){location.reload();}
+function getGrade(m){return m>=85?'A':m>=70?'B':'C';}
 function render(list=students){
- let g=document.getElementById('grid'); g.innerHTML="";
- list.forEach((s,i)=>{
-  let color=s.fee==='Paid'?'green':'red';
-  g.innerHTML+=`<div class="card">
-   <img src="https://i.pravatar.cc/200?u=${s.roll}" style="width:100%;border-radius:8px">
-   <h4>${s.roll}<br>${s.name}</h4>
-   <p style="font-size:12px">Marks:${s.marks} | ${getGrade(s.marks)}<br>Fee: <b style="color:${color}">${s.fee}</b></p>
-   <button class="btn" style="background:#0984e3" onclick="openDetails(${i})">Click for Details</button>
-   <button class="btn" style="background:#e84393" onclick="makeID(${i})">ID Card PDF</button>
-  </div>`;
- });
- localStorage.setItem('ece_data',JSON.stringify(students));
+let g=document.getElementById('grid');g.innerHTML="";
+list.forEach((s,i)=>{
+let photoHTML=s.photo?`<img src="${s.photo}" style="width:100%;border-radius:8px;height:150px;object-fit:cover">`:`<div style="width:100%;height:150px;background:#dfe6e9;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:40px">${s.name[0]}</div>`;
+g.innerHTML+=`<div class="card">${photoHTML}<h4>${s.roll} - ${s.name}</h4><p style="font-size:13px">📚 ${s.marks} Marks | ${getGrade(s.marks)}<br>💰 Fee: <b style="color:${s.fee==='Paid'?'green':'red'}">${s.fee}</b></p><button class="btn" style="background:#0984e3" onclick="openDetails(${i})">Parents Details</button><button class="btn" style="background:#e84393" onclick="makeID(${i})">ID Card</button></div>`;
+});
+localStorage.setItem('ece_data',JSON.stringify(students));
 }
-function searchNow(){
- let q=document.getElementById('searchBox').value.toLowerCase();
- let f=students.filter(s=>s.name.toLowerCase().includes(q)||s.roll.includes(q)||s.father.toLowerCase().includes(q));
- render(f);
-}
-function addStu(){
- let o={roll:r_roll.value,name:r_name.value,marks:Number(r_marks.value),father:r_father.value,mother:r_mother.value,fee:r_fee.value};
- if(!o.roll||!o.name) return alert("Roll & Name kavali ra Sasi");
- students.push(o); render();
- r_roll.value=r_name.value=r_marks.value=r_father.value=r_mother.value="";
-}
-// ONLY NAMES + PARENTS DETAILS
-function openDetails(i){
- let s=students[i];
- document.getElementById('modalBox').innerHTML=`
-  <h3 style="color:#c2185b">${s.roll} - ${s.name}</h3>
-  <p><b>Father:</b> ${s.father}</p>
-  <p><b>Mother:</b> ${s.mother}</p>
-  <p><b>Fee:</b> ${s.fee}</p>
-  <p><b>Grade:</b> ${getGrade(s.marks)} (${s.marks} marks)</p>
-  <button class="btn" style="background:#333" onclick="closeM()">Close</button>
- `;
- document.getElementById('modal').style.display='flex';
-}
-function closeM(){document.getElementById('modal').style.display='none'}
-function makeID(i){
- let s=students[i]; let {jsPDF}=window.jspdf; let doc=new jsPDF();
- doc.setFillColor(194,24,91); doc.rect(0,0,210,20,'F'); doc.setTextColor(255,255,255); doc.text("ECE ID CARD",70,13);
- doc.setTextColor(0,0,0); doc.setFontSize(12);
- doc.text(`Roll: ${s.roll}`,20,35); doc.text(`Name: ${s.name}`,20,45); doc.text(`Father: ${s.father}`,20,55); doc.text(`Mother: ${s.mother}`,20,65); doc.text(`Grade: ${getGrade(s.marks)}`,20,75); doc.text(`Fee: ${s.fee}`,20,85);
- doc.save(`${s.roll}_${s.name}_ID.pdf`);
-}
-function exportExcel(){
- let data=students.map(s=>({Roll:s.roll,Name:s.name,Marks:s.marks,Grade:getGrade(s.marks),Father:s.father,Mother:s.mother,Fee:s.fee}));
- let ws=XLSX.utils.json_to_sheet(data); let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"ECE"); XLSX.writeFile(wb,"ECE_Parents_List.xlsx");
-}
-function importExcel(){
- let f=document.getElementById('fileUp').files[0]; if(!f) return alert("Excel file select chey");
- let r=new FileReader(); r.onload=(e)=>{
-  let wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'}); let json=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-  students=json.map(x=>({roll:x.Roll||x.roll, name:x.Name||x.name, marks:x.Marks||0, father:x.Father||"", mother:x.Mother||"", fee:x.Fee||"Paid"}));
-  render(); alert("Imported "+students.length);
- }; r.readAsArrayBuffer(f);
-}
-let chartIns=null;
-function toggleDash(){
- let d=document.getElementById('dash'); d.style.display=d.style.display==='none'?'block':'none';
- let pass=students.filter(s=>s.marks>=40).length; let fail=students.length-pass;
- document.getElementById('statText').innerText=`Total ${students.length} | Pass ${pass} | Fail ${fail}`;
- let ctx=document.getElementById('chart'); if(chartIns) chartIns.destroy();
- chartIns=new Chart(ctx,{type:'pie',data:{labels:['Pass','Fail'],datasets:[{data:[pass,fail],backgroundColor:['#00b894','#d63031']}]}});
-}
-</script>
-</body>
-</html>
+function openDetails(i){let s=students[i];alert(`Student: ${s.name}\nRoll: ${s.roll}\nFather: ${s.father}\nMother: ${s.mother}\nMarks: ${s.marks}\nFee: ${s.fee}`);}
+function makeID(i){let s=students[i];let w=window.open('','','width=350,height=500');w.document.write(`<div style="border:2px solid #000;padding:15px;text-align:center"><h3>ECE ID CARD</h3><h2>${s.name}</h2><p>Roll: ${s.roll}<br>Father: ${s.father}<br>Grade: ${getGrade(s.marks)}</p></div>`);}
+function addStudent(){let n=document.getElementById('newName').value,r=document.getElementById('newRoll').value,f=document.getElementById('newFather').value,m=document.getElementById('newMother').value,mk=document.getElementById('newMarks').value;if(!n||!r)return alert('Name Roll kavali');students.push({name:n,roll:r,father:f,mother:m,marks:parseInt(mk)||0,fee:"Pending",photo:""});render();}
+function doSearch(){let q=document.getElementById('search').value.toLowerCase();render(students.filter(s=>s.name.toLowerCase().includes(q)||s.roll.includes(q)));}
+</script></body></html>
