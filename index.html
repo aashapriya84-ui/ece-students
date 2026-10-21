@@ -1,29 +1,54 @@
 <!DOCTYPE html>
 <html>
-<head><title>ECE Students</title><meta name="viewport" content="width=device-width,initial-scale=1">
-<style>body{font-family:Arial;background:#f0f2f5;margin:0}header{background:#6c5ce7;color:#fff;padding:15px;text-align:center}.card{background:#fff;border-radius:10px;padding:10px;margin:10px;width:200px;display:inline-block;text-align:center;box-shadow:0 2px 6px #0002}.grid{display:flex;flex-wrap:wrap;justify-content:center}</style>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ECE Students - A6 ERP</title>
+<style>
+body{font-family:Arial;background:#f0f2f5;margin:0}
+header{background:#6c5ce7;color:#fff;padding:15px;text-align:center;position:sticky;top:0;z-index:10}
+.grid{display:flex;flex-wrap:wrap;justify-content:center;padding:12px;gap:14px}
+.card{background:#fff;border-radius:12px;padding:12px;width:210px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.card img{width:100%;height:180px;border-radius:10px;object-fit:cover;background:#eee}
+.btn{border:none;padding:6px 10px;border-radius:6px;color:#fff;cursor:pointer;margin:3px;font-size:12px}
+.search-box{background:#fff;padding:12px;text-align:center}
+.search-box input{padding:10px;width:300px;border-radius:8px;border:1px solid #ccc}
+</style>
 </head>
 <body>
-<header><h2>ECE Students - A6 ERP</h2><p>Admin: Admin / 123</p></header>
-<div style="text-align:center;padding:10px"><input id="s" placeholder="Search" onkeyup="search()" style="padding:8px;width:250px"></div>
+<header><h2>ECE Students Management - A6 ERP</h2><small>Admin: Admin / 123</small></header>
+<div class="search-box"><input id="q" placeholder="Search Roll / Name" onkeyup="doSearch()"></div>
 <div id="grid" class="grid"></div>
+
 <script>
 let students=[
-{name:"S ANUSHA",roll:"403",marks:88,fee:"Paid"},
-{name:"M DIVYA",roll:"404",marks:76,fee:"Paid"},
-{name:"G BHANU PRASAD",roll:"405",marks:65,fee:"Pending"},
-{name:"R SURESH",roll:"406",marks:42,fee:"Paid"},
-{name:"V ANIL",roll:"408",marks:90,fee:"Paid"},
-{name:"A SASI PRIYA",roll:"413",marks:95,fee:"Pending"}
+{name:"TEJA", roll:"401", photo:"TEJA.jpeg", marks:88, fee:"Paid", father:"TEJA Father"},
+{name:"NANI", roll:"402", photo:"nani.jpg", marks:82, fee:"Paid", father:"NANI Father"},
+{name:"S ANUSHA", roll:"403", photo:"girl1.jpg", marks:90, fee:"Paid", father:"S Ramesh"},
+{name:"M DIVYA", roll:"404", photo:"girl2.jpg", marks:76, fee:"Paid", father:"M Prasad"},
+{name:"GIRL 3", roll:"405", photo:"girl3.jpg", marks:85, fee:"Pending", father:"G Srinu"},
+{name:"GIRL 4", roll:"406", photo:"girl4.jpg", marks:78, fee:"Paid", father:"R Kumar"},
+{name:"BOY 1", roll:"407", photo:"boy1.jpg", marks:65, fee:"Pending", father:"Boy1 Father"},
+{name:"BOY 2", roll:"408", photo:"boy2.jpg", marks:72, fee:"Paid", father:"Boy2 Father"},
+{name:"BOY 3", roll:"409", photo:"boy3.jpg", marks:55, fee:"Pending", father:"Boy3 Father"},
+{name:"GIR 1", roll:"410", photo:"gir1.jpg", marks:80, fee:"Paid", father:"GIR Father"},
+{name:"SV STUDENT", roll:"432", photo:"SV.jpeg", marks:92, fee:"Paid", father:"SV Father"},
+{name:"MI STUDENT", roll:"469", photo:"MI.jpeg", marks:84, fee:"Paid", father:"MI Father"}
 ];
+
+function getGrade(m){return m>=85?'A':m>=70?'B':m>=50?'C':'D';}
+
 function render(list){
 let g=document.getElementById('grid');g.innerHTML="";
 list.forEach(s=>{
-g.innerHTML+=`<div class="card"><div style="background:#dfe6e9;height:120px;display:flex;align-items:center;justify-content:center;font-size:40px;border-radius:8px">${s.name[0]}</div><h4>${s.roll} - ${s.name}</h4><p>${s.marks} Marks<br>Fee: ${s.fee}</p><button onclick="alert('Father details for ${s.name}')">Parents</button> <button onclick="alert('ID Card ${s.name}')">ID Card</button><br><button onclick="upload(this)">📷 Add Photo</button></div>`;
+let img=`<img src="${s.photo}" onerror="this.src='https://via.placeholder.com/200x180?text=${s.name[0]}';this.onerror=null">`;
+g.innerHTML+=`<div class="card">${img}<h4 style="margin:8px 0">${s.roll} - ${s.name}</h4><p style="font-size:13px;margin:4px">📚 ${s.marks} Marks | Grade: ${getGrade(s.marks)}<br>💰 Fee: <b style="color:${s.fee==='Paid'?'green':'red'}">${s.fee}</b></p><button class="btn" style="background:#0984e3" onclick="alert('STUDENT: ${s.name}\\nROLL: ${s.roll}\\nFATHER: ${s.father}\\nMARKS: ${s.marks}\\nFEE: ${s.fee}')">Parents Details</button><button class="btn" style="background:#e84393" onclick="alert('ID CARD\\nName: ${s.name}\\nRoll: ${s.roll}\\nFather: ${s.father}')">ID Card</button></div>`;
 });
 }
-function search(){let q=document.getElementById('s').value.toLowerCase();render(students.filter(x=>x.name.toLowerCase().includes(q)));}
-function upload(btn){let i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=e=>{let r=new FileReader();r.onload=ev=>{btn.parentElement.querySelector('div').innerHTML=`<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;};r.readAsDataURL(e.target.files[0]);};i.click();}
+
+function doSearch(){
+let v=document.getElementById('q').value.toLowerCase();
+render(students.filter(s=>s.name.toLowerCase().includes(v)||s.roll.includes(v)));
+}
 render(students);
 </script>
 </body>
